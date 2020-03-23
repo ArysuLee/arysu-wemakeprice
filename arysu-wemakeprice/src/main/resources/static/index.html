@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+
+	<div>
+	URL: <input type="text" id="url" value="https://hc.apache.org/httpcomponents-client-4.5.x/httpclient/apidocs/"/> 
+	태그제외: <input type="radio" name="excludeTag" value="true" checked>예 <input type="radio" name="excludeTag" value="false"> 아니오
+	묶음개수: <input type="text" id="bundleCount" value="1"/>
+	<p/>
+	<input type="button" value="결과" id="getResult" />
+	<script>
+		$('#getResult').click(function() {
+
+			$('#result').html('');
+			
+			$.ajax({
+				url : 'http://localhost:8080/v1/operation',
+				contentType: "application/json",
+				dataType : 'json',
+				type : 'POST',
+				data : JSON.stringify({
+					'url' : $('#url').val(),
+					'excludeTag' : $('input[name="excludeTag"]:checked').val(),
+					'bundleCount' : $('#bundleCount').val()
+				}),
+				success : function(result) {
+					if (result['success'] == true) {
+						$data = result['data'];
+						$quotient = $data['quotient'];
+						$remainder = $data['remainder'];
+						$('#result').html('<b>결과:</b> ' + $quotient + '<br/><b>나머지:</b> ' + $remainder);
+					}
+				}
+			});
+		})
+	</script>
+	</div>
+	<p/>
+	<div id="result"></div>
+</body>
+</html>
+
